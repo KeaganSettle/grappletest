@@ -45,6 +45,13 @@ function toRadians (num: number) {
 controller.A.onEvent(ControllerButtonEvent.Released, function () {
     CheckStopGrappling()
 })
+function updateGrappling () {
+    if (Grappling) {
+        ReelIn()
+        Swing()
+        layout_dots()
+    }
+}
 function layout_dots () {
     _dist_x = Hook.x - PlayerSprite.x
     _dist_y = Hook.y - PlayerSprite.y
@@ -58,21 +65,14 @@ function layout_dots () {
         _dot_y += _step_y
     }
 }
-function updateGrappling () {
-    if (Grappling) {
-        ReelIn()
-        Swing()
-        layout_dots()
-    }
-}
 function CheckStopGrappling () {
     if (Grappling) {
         Grappling = false
         Anchored = false
         PlayerSprite.ay = G
         sprites.destroy(Hook)
-        for (let value of GrappleDots) {
-            sprites.destroy(value)
+        for (let value2 of GrappleDots) {
+            sprites.destroy(value2)
         }
         sprites.destroy(attach)
     }
@@ -96,7 +96,24 @@ scene.onHitWall(SpriteKind.Projectile, function (sprite, location) {
 function CheckGrappleStart () {
     if (!(Grappling)) {
         Grappling = true
-        Hook = sprites.createProjectileFromSprite(assets.image`Bullet`, PlayerSprite, hook_vx * direction_x, hook_vy)
+        Hook = sprites.createProjectileFromSprite(img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `, PlayerSprite, hook_vx * direction_x, hook_vy)
         Hook.setFlag(SpriteFlag.DestroyOnWall, false)
         Hook.setFlag(SpriteFlag.AutoDestroy, false)
         GrappleDots = []
@@ -159,11 +176,11 @@ function UpdatePlayerSprite () {
 let Anchor_Dir_X = 0
 let AnchorRatio = 0
 let attach: Sprite = null
-let Grappling = false
 let _dot_y = 0
 let _dot_x = 0
 let GrappleDots: Sprite[] = []
 let _step_x = 0
+let Grappling = false
 let _prev_x = 0
 let anchor_dist_y = 0
 let anchor_dist_x = 0
@@ -192,15 +209,66 @@ hook_vy = -1000
 Reel_Step = 1.5
 G = 500
 SwingSpeed = 400
-PlayerSprite = sprites.create(assets.image`PlayerCharacter`, SpriteKind.Player)
-PlayerSpriteImage = assets.image`PlayerCharacter`
+PlayerSprite = sprites.create(img`
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    `, SpriteKind.Player)
+PlayerSpriteImage = img`
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    `
 PlayerSpriteFlipped = PlayerSpriteImage.clone()
 PlayerSpriteFlipped.flipX()
 controller.moveSprite(PlayerSprite, 100, 0)
 PlayerSprite.ay = G
 PlayerSprite.setPosition(12, 88)
 cameraOffsetScene.cameraFollowWithOffset(PlayerSprite, 0, -35)
-let EnemySprite = sprites.create(assets.image`myImage`, SpriteKind.Enemy)
+let EnemySprite = sprites.create(img`
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    `, SpriteKind.Enemy)
 tiles.setCurrentTilemap(tilemap`level2`)
 info.setLife(3)
 direction_x = 1
